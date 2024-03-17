@@ -14,16 +14,21 @@ def get_e_prime(exponent):
 def normalize_decimal(decimal):
     dec_string = str(decimal)
     left, _, right = dec_string.partition('.')
-    num_zeros = 16 - len(left) - len(right)
-    ans = '0' * num_zeros + left
-    if right:
-        ans += right
-    else:
-        ans += '0' * num_zeros
 
+    ans = left + right
     if ans[-1] == '0':
-         ans = ans[:-1]
-         ans = '0' + ans
+            ans = ans[:-1]
+            
+    if len(ans) < 16:
+        num_zeros = 16 - len(ans)
+        ans = '0' * num_zeros + left
+        if right:
+            ans += right
+        else:
+            ans += '0' * num_zeros
+        if ans[-1] == '0':
+            ans = ans[:-1]
+            ans = '0' + ans
 
     return ans
 
