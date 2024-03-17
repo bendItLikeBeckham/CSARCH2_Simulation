@@ -149,7 +149,7 @@ e_prime = get_e_prime(exponent, decimal)
 sign_bit = check_sign(decimal)
 
 normalized_input = normalize_decimal(decimal, e_prime)
-print(normalized_input)
+print("Normalized Input: " + normalized_input)
 
 grouped_decimal = get_grouped_decimal(normalized_input)
 
