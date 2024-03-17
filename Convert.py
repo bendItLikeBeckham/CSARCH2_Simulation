@@ -17,8 +17,12 @@ def get_e_prime(exponent, decimal):
 
 # Returns Normalized 16 digit of the decimal
 def normalize_decimal(decimal, e_prime):
+
     dec_string = str(decimal)
+    if(dec_string[0] == '-'):
+        dec_string = dec_string[1:]
     left, _, right = dec_string.partition('.')
+
 
     ans = left + right
     if ans[-1] == '0':
