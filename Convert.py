@@ -87,7 +87,7 @@ def get_grouped_decimal(normalized_input):
         groups.append(group)   
     return groups
 
-#Converts A E I numbers to densely packed BCD equivalent
+#Converts A E I numbers of the current group to densely packed BCD equivalent
 
 def convert_AEI_to_String(a_binary_string,e_binary_string,i_binary_string):
     if len(a_binary_string) < 3:
