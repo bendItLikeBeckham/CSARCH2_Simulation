@@ -7,11 +7,16 @@ def check_sign(decimal):
         return 0
     
 # Gets e' value
-def get_e_prime(exponent):
+def get_e_prime(exponent, decimal):
+    dec_string = str(decimal)
+    left, _, right = dec_string.partition('.')
+
+    if int(right) > 0:
+         exponent =  exponent - len(right)
     return exponent + 398
 
 # Returns Normalized 16 digit of the decimal
-def normalize_decimal(decimal):
+def normalize_decimal(decimal, e_prime):
     dec_string = str(decimal)
     left, _, right = dec_string.partition('.')
 
@@ -136,10 +141,10 @@ def get_BCD_values(grouped_decimal):
 decimal = float(input("Input Decimal: "))
 exponent = int(input("Input Exponent: "))
 
-e_prime = get_e_prime(exponent)
+e_prime = get_e_prime(exponent, decimal)
 sign_bit = check_sign(decimal)
 
-normalized_input = normalize_decimal(decimal)
+normalized_input = normalize_decimal(decimal, e_prime)
 print(normalized_input)
 
 grouped_decimal = get_grouped_decimal(normalized_input)
