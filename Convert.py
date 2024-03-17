@@ -65,6 +65,9 @@ def get_combination_field(e_prime, normalized_input):
     if len(string_three_digits) < 3:
         num_zeros = 3 - len(string_three_digits)
         string_three_digits = '0' * num_zeros  + string_three_digits 
+    if len(string_three_digits) == 4:
+         string_three_digits = string_three_digits[1:]
+         
     return first_2_combi + string_three_digits
 
 #Get Exponent Continuation
