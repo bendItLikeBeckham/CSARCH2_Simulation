@@ -70,19 +70,13 @@ def get_exponent_field(e_prime):
 
 
 decimal = float(input("Input Decimal: "))
-
 exponent = int(input("Input Exponent: "))
 
 e_prime = get_e_prime(exponent)
-
 sign_bit = check_sign(decimal)
 
 normalized_input = normalize_decimal(decimal)
-
 print(normalized_input)
-
-
-#print(get_combination_field(e_prime,normalized_input))
 
 
 
