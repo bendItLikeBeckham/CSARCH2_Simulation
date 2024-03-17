@@ -72,6 +72,62 @@ def get_exponent_field(e_prime):
 
     return last_8_exponent
 
+#Get group of 3 decimals for densely packed BCD
+def get_grouped_decimal(normalized_input):
+    coefficient_string = normalized_input[1:]
+
+    groups = []
+    for i in range(0, 15, 3):
+        group = coefficient_string[i:i+3]
+        groups.append(group)   
+    return groups
+
+def convert_AEI_to_String(a_binary_string,e_binary_string,i_binary_string):
+    if len(a_binary_string) < 3:
+            num_zeroes = 3 - len(a_binary_string)
+            a_binary_string = '0' * num_zeroes + a_binary_string
+    if len(e_binary_string) < 3:
+            num_zeroes = 3 - len(e_binary_string)
+            e_binary_string = '0' * num_zeroes + e_binary_string
+    if len(i_binary_string) < 3:
+            num_zeroes = 3 - len(i_binary_string)
+            i_binary_string = '0' * num_zeroes + i_binary_string
+    
+    return a_binary_string + " " + e_binary_string + " " + '0' + " " + i_binary_string + "  "
+
+def get_BCD_values(grouped_decimal):
+
+    major_count = 0
+
+    BCD_string = ""
+
+    for group in grouped_decimal:
+        a = int(group[0])
+        e = int(group[1])
+        i = int(group[2])
+        if (a > 7):
+            major_count = major_count + 1
+        if (e > 7):
+            major_count = major_count + 1
+        if (i > 7):
+            major_count = major_count + 1
+
+        if major_count == 0:
+            a_binary = bin(a)
+            e_binary = bin(e)
+            i_binary = bin(i)
+
+            a_binary_string = str(a_binary)
+            e_binary_string = str(e_binary)
+            i_binary_string = str(i_binary)
+
+            a_binary_string = remove_0b(a_binary_string)
+            e_binary_string = remove_0b(e_binary_string)
+            i_binary_string = remove_0b(i_binary_string)
+
+            BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string) + " "
+
+    return BCD_string
 
 
 decimal = float(input("Input Decimal: "))
@@ -83,7 +139,11 @@ sign_bit = check_sign(decimal)
 normalized_input = normalize_decimal(decimal)
 print(normalized_input)
 
-
+grouped_decimal = get_grouped_decimal(normalized_input)
 
 print("Sign","     ","Combination Field","     ","Exponent Continuation","     ","Coefficient Continuation","     ") 
 print(sign_bit,"     ", get_combination_field(e_prime,normalized_input),"     ", get_exponent_field(e_prime))
+
+print(get_BCD_values(grouped_decimal))
+
+
