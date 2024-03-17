@@ -67,7 +67,7 @@ def get_combination_field(e_prime, normalized_input):
         string_three_digits = '0' * num_zeros  + string_three_digits 
     if len(string_three_digits) == 4:
          string_three_digits = string_three_digits[1:]
-         
+
     return first_2_combi + string_three_digits
 
 #Get Exponent Continuation
@@ -141,6 +141,49 @@ def get_BCD_values(grouped_decimal):
             i_binary_string = remove_0b(i_binary_string)
 
             BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string) + " "
+        
+        if major_count == 2:
+             
+            if a < 8:
+                col_bit = "10"
+                first_byte = bin(a)
+            elif e < 8:
+                col_bit = "01"
+                first_byte = bin(e)
+            elif i < 8:
+                col_bit = "00"
+                first_byte = bin(i)
+
+            first_byte_string = str(first_byte)
+            first_byte_string = remove_0b(first_byte_string)
+
+            if len(first_byte_string) == 1:
+                first_byte_string = "0" + first_byte_string
+            
+            if len(first_byte_string) == 3:
+                first_byte_string = first_byte_string[:2]
+
+            d = bin(a)
+            h = bin(e)
+            m = bin(i)
+
+            d_string = str(d)
+            h_string = str(h)
+            m_string = str(m)
+
+            d_string = remove_0b(d_string)
+            h_string = remove_0b(h_string)
+            m_string = remove_0b(m_string)
+
+            if len(d_string) > 1:
+                d_string = d_string[-1]
+            if len(h_string) > 1:
+                h_string = h_string[-1]
+            if len(m_string) > 1:
+                m_string = m_string[-1]
+             
+
+            BCD_string = BCD_string + first_byte_string + d_string +" "+ col_bit + h_string + " " + "1" +" "+ "11" + m_string
 
     return BCD_string
 
