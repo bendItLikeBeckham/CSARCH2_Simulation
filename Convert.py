@@ -29,14 +29,14 @@ def normalize_decimal(decimal):
 
     #Get the combined string and removes last bit if it is 0
     ans = left + right
-    if ans[-1] == '0':
-            ans = ans[:-1]
+    if int(right) == 0:
+            ans = left
 
     #If kulang ung decimal       
     if len(ans) < 16:
         num_zeros = 16 - len(ans)
         ans = '0' * num_zeros + left
-        if right:
+        if int(right) != 0:
             ans += right
         else:
             ans += '0'
