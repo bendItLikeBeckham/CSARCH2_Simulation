@@ -13,6 +13,8 @@ def get_e_prime(exponent, decimal):
     dec_string = str(decimal)
     left, _, right = dec_string.partition('.')
 
+    if right == "":
+        right = '0'
     if int(right) > 0:
          exponent =  exponent - len(right)
     return exponent + 398
@@ -29,6 +31,8 @@ def normalize_decimal(decimal):
 
     #Get the combined string and removes last bit if it is 0
     ans = left + right
+    if right == "":
+        right = '0'
     if int(right) == 0:
             ans = left
 
