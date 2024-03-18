@@ -19,9 +19,95 @@ def get_e_prime(exponent, decimal):
          exponent =  exponent - len(right)
     return exponent + 398
 
-# Returns Normalized 16 digit of the decimal
-def normalize_decimal(decimal):
+def GRS(non_normalized, sign):
+    temp = ""
+    grs = 0
+    sticky = 0
+    rounded = 0
+    #Check if Greater than Less than, or Equal to 19 digits
+    if(len(non_normalized) == 19):
+        #get digits 17-19 and make them the GRS
+        grs = int(non_normalized[16:19], 10)
+    elif(len(non_normalized) < 19):
+        #fill up remaining digits
+        while len(non_normalized) != 19:
+            non_normalized = non_normalized + '0'
+        grs = int(non_normalized[16:19], 10)
+    elif(len(non_normalized) > 19):
+        temp = non_normalized[16:18]
+        #19 onwards will need to be checked
+        sticky = int(non_normalized[18:], 10)
+        if (sticky > 0):
+            sticky = '1'
+        else :
+            sticky = '0'
+        temp = temp + sticky
+        grs = int(temp, 10)
 
+    #GRS is always 3 digits long, meaning the basis will always be 500
+    #different cases based on sign
+    if (grs > 500):
+        #print(sign)
+        #print(grs)
+        if (sign == '0'):
+            #print("Addition")
+            rounded = int(non_normalized[:16], 10) + 1
+        else:
+            #print("Subtraction")
+            rounded = int(non_normalized[:16], 10) - 1
+    elif(grs == 500):
+        #check if even
+        temp = int(non_normalized[15], 10)
+        if (temp % 2 != 0):
+            #change
+            if (sign == '0'):
+                rounded = int(non_normalized[:16], 10) + 1
+            else:
+                rounded = int(non_normalized[:16], 10) - 1
+        else:
+            rounded = int(non_normalized[:16], 10)
+    elif(grs < 500):
+        rounded = int(non_normalized[:16], 10)
+    rounded = str(rounded)
+    print(rounded)
+    return rounded
+
+def RTE(non_normalized, sign):
+    temp = 0
+    exponent = 0
+    basis = 0
+    rounded = int(non_normalized[:16], 10)
+    #Check if the extra starts with a 5 or not
+    temp = int(non_normalized[16], 10)
+    if(temp > 5):
+        rounded = rounded + 1
+    elif(temp == 5):
+        #check if the extra part is greater than the halfpoint
+        exponent = len(non_normalized[16:])
+        basis = (10**exponent)/2
+        temp = int(non_normalized[16:], 10)
+        if(temp > basis):
+            rounded = rounded + 1
+        elif (temp == basis):
+            if(int(non_normalized[16], 10) % 2 != 0):
+                if (sign == '0'):
+                    rounded = rounded + 1
+                else:
+                    rounded = rounded - 1
+        else:
+            #stay
+            rounded = rounded
+    rounded = str(rounded)
+    print(rounded)
+    return rounded
+
+
+        
+
+    
+
+# Returns Normalized 16 digit of the decimal
+def normalize_decimal(decimal, rounding, sign):
     #Splits up the whole number and fractional to left and right respectively (Removes '-' as well)
     dec_string = str(decimal)
     if(dec_string[0] == '-'):
@@ -48,7 +134,11 @@ def normalize_decimal(decimal):
             ans = ans[:-1]
     
     #Put round up here
-
+    if len(ans) > 16:
+        if(rounding == 0):
+            ans = GRS(ans, sign)
+        else:
+            ans = RTE(ans, sign)
     return ans
 
 # Removes the "0b" at the start of a binary string after it is converted
@@ -263,6 +353,7 @@ def hex_to_binary (complete_binary):
 
 decimal = Decimal(input("Input Decimal: "))
 exponent = int(input("Input Exponent: "))
+rounding = int(input("Rounding Method (0=GRS | 1=RTE):"))
 
 e_prime = get_e_prime(exponent, decimal)
 sign_bit = check_sign(decimal)
@@ -274,7 +365,7 @@ left, _, right = dec_string.partition('.')
 print(left)
 print(right)
 
-normalized_input = normalize_decimal(decimal)
+normalized_input = normalize_decimal(decimal, rounding, sign_bit)
 print("Normalized Input: " + normalized_input)
 
 grouped_decimal = get_grouped_decimal(normalized_input)
