@@ -4,9 +4,9 @@ from decimal import Decimal
 # Gets Sign Bit
 def check_sign(decimal):
     if decimal < 0:
-        return 1
+        return '1'
     else:
-        return 0
+        return '0'
     
 # Gets e' value
 def get_e_prime(exponent, decimal):
