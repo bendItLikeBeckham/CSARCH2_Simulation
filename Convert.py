@@ -234,6 +234,29 @@ def get_BCD_values(grouped_decimal):
 
     return BCD_string
 
+def hex_to_binary (complete_binary):
+    #Hex to binary
+    binary = ""
+    full_Hex = ""
+    binary = complete_binary
+
+    start = 0
+    end = 4
+
+    #Every binary is 64 bits long
+    for x in range(11):
+        #4 bits at a time
+        sub = binary[start:end]
+        decimal = int(sub, 2) #decinal
+        temp = hex(decimal)
+        full_Hex = full_Hex + temp[2]
+
+        #increment
+        start = start + 4
+        end = end + 4
+
+    return full_Hex
+
 decimal = Decimal(input("Input Decimal: "))
 exponent = int(input("Input Exponent: "))
 
@@ -262,3 +285,6 @@ print("Full Binary Representation not split")
 complete_binary = sign_bit + get_combination_field(e_prime,normalized_input) + get_exponent_field(e_prime) + get_BCD_values(grouped_decimal)
 print("-------------------------------------------")
 print(complete_binary)
+print("-------------------------------------------")
+hexed = hex_to_binary(complete_binary)
+print(hexed)
