@@ -108,7 +108,7 @@ def convert_AEI_to_String(a_binary_string,e_binary_string,i_binary_string):
     
     return a_binary_string + " " + e_binary_string + " " + '0' + " " + i_binary_string + "  "
 
-def get_binary_digit(num):
+def get_binary_digit_to_string(num):
     binary_num = bin(num)
     binary_num_string = str(binary_num)
     binary_num_string = remove_0b(binary_num_string)
@@ -135,17 +135,9 @@ def get_BCD_values(grouped_decimal):
             major_count = major_count + 1
 
         if major_count == 0:
-            a_binary = bin(a)
-            e_binary = bin(e)
-            i_binary = bin(i)
-
-            a_binary_string = str(a_binary)
-            e_binary_string = str(e_binary)
-            i_binary_string = str(i_binary)
-
-            a_binary_string = remove_0b(a_binary_string)
-            e_binary_string = remove_0b(e_binary_string)
-            i_binary_string = remove_0b(i_binary_string)
+            a_binary_string = get_binary_digit_to_string(a)
+            e_binary_string = get_binary_digit_to_string(e)
+            i_binary_string = get_binary_digit_to_string(i)
 
             BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string) + " "
         
@@ -170,17 +162,9 @@ def get_BCD_values(grouped_decimal):
             if len(first_byte_string) == 3:
                 first_byte_string = first_byte_string[:2]
 
-            d = bin(a)
-            h = bin(e)
-            m = bin(i)
-
-            d_string = str(d)
-            h_string = str(h)
-            m_string = str(m)
-
-            d_string = remove_0b(d_string)
-            h_string = remove_0b(h_string)
-            m_string = remove_0b(m_string)
+            d_string = get_binary_digit_to_string(a)
+            h_string = get_binary_digit_to_string(e)
+            m_string = get_binary_digit_to_string(i)
 
             if len(d_string) > 1:
                 d_string = d_string[-1]
