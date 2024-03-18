@@ -20,16 +20,19 @@ def get_e_prime(exponent, decimal):
 # Returns Normalized 16 digit of the decimal
 def normalize_decimal(decimal):
 
+    #Splits up the whole number and fractional to left and right respectively (Removes '-' as well)
     dec_string = str(decimal)
     if(dec_string[0] == '-'):
         dec_string = dec_string[1:]
     left, _, right = dec_string.partition('.')
 
 
+    #Get the combined string and removes last bit if it is 0
     ans = left + right
     if ans[-1] == '0':
             ans = ans[:-1]
-            
+
+    #If kulang ung decimal       
     if len(ans) < 16:
         num_zeros = 16 - len(ans)
         ans = '0' * num_zeros + left
@@ -39,6 +42,8 @@ def normalize_decimal(decimal):
             ans += '0'
         if ans[-1] == '0':
             ans = ans[:-1]
+    
+    #Put round up here
 
     return ans
 
@@ -120,6 +125,7 @@ def get_binary_digit_to_string(num):
 
     return binary_num_string
 
+# Gets binary value of the 2 bits for the BCD
 def get_binary_byte_to_string(byte):
     byte_string = remove_0b(byte)
 
@@ -228,9 +234,10 @@ exponent = int(input("Input Exponent: "))
 e_prime = get_e_prime(exponent, decimal)
 sign_bit = check_sign(decimal)
 
+
+#Split fractional and whole part into two strings
 dec_string = str(decimal)
 left, _, right = dec_string.partition('.')
-
 print(left)
 print(right)
 
