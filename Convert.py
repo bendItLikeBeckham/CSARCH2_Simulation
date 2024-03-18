@@ -16,7 +16,7 @@ def get_e_prime(exponent, decimal):
     return exponent + 398
 
 # Returns Normalized 16 digit of the decimal
-def normalize_decimal(decimal, e_prime):
+def normalize_decimal(decimal):
 
     dec_string = str(decimal)
     if(dec_string[0] == '-'):
@@ -34,10 +34,9 @@ def normalize_decimal(decimal, e_prime):
         if right:
             ans += right
         else:
-            ans += '0' * num_zeros
+            ans += '0'
         if ans[-1] == '0':
             ans = ans[:-1]
-            ans = '0' + ans
 
     return ans
 
@@ -108,6 +107,13 @@ def convert_AEI_to_String(a_binary_string,e_binary_string,i_binary_string):
             i_binary_string = '0' * num_zeroes + i_binary_string
     
     return a_binary_string + " " + e_binary_string + " " + '0' + " " + i_binary_string + "  "
+
+def get_binary_digit(num):
+    binary_num = bin(num)
+    binary_num_string = str(binary_num)
+    binary_num_string = remove_0b(binary_num_string)
+
+    return binary_num_string
 
 #Get the whole string of all A,E,I numbers in densely packed BCD Form
 def get_BCD_values(grouped_decimal):
@@ -183,7 +189,7 @@ def get_BCD_values(grouped_decimal):
                 m_string = m_string[-1]
              
 
-            BCD_string = BCD_string + first_byte_string + d_string +" "+ col_bit + h_string + " " + "1" +" "+ "11" + m_string
+            BCD_string = BCD_string + first_byte_string + d_string +" "+ col_bit + h_string + " " + "1" +" "+ "11" + m_string + " "
 
     return BCD_string
 
@@ -200,7 +206,7 @@ left, _, right = dec_string.partition('.')
 print(left)
 print(right)
 
-normalized_input = normalize_decimal(decimal, e_prime)
+normalized_input = normalize_decimal(decimal)
 print("Normalized Input: " + normalized_input)
 
 grouped_decimal = get_grouped_decimal(normalized_input)
