@@ -113,7 +113,9 @@ def convert_AEI_to_String(a_binary_string,e_binary_string,i_binary_string):
             num_zeroes = 3 - len(i_binary_string)
             i_binary_string = '0' * num_zeroes + i_binary_string
     
-    return a_binary_string + " " + e_binary_string + " " + '0' + " " + i_binary_string + "  "
+    #return a_binary_string + " " + e_binary_string + " " + '0' + " " + i_binary_string + "  "
+    return a_binary_string + e_binary_string + '0' + i_binary_string
+
 
 
 # Gets binary value of a digit and converts it to binary string equivalent
@@ -161,7 +163,9 @@ def get_BCD_values(grouped_decimal):
             e_binary_string = get_binary_digit_to_string(e)
             i_binary_string = get_binary_digit_to_string(i)
 
-            BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string) + " "
+            #BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string) + " "
+            BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string)
+
 
         elif major_count == 1:
             if a > 7:
@@ -195,8 +199,9 @@ def get_BCD_values(grouped_decimal):
                 first_byte_string = get_binary_byte_to_string(str(bin(a)))
                 second_byte_string = get_binary_byte_to_string(str(bin(i)))
                     
-            BCD_string = BCD_string + first_byte_string + d_string +" "+ second_byte_string + h_string + " " + "1" +" "+ col_bit + m_string + " "
-        
+            #BCD_string = BCD_string + first_byte_string + d_string +" "+ second_byte_string + h_string + " " + "1" +" "+ col_bit + m_string + " "
+            BCD_string = BCD_string + first_byte_string + d_string + second_byte_string + h_string + "1" + col_bit + m_string
+
         
         elif major_count == 2:
              
@@ -224,7 +229,8 @@ def get_BCD_values(grouped_decimal):
                 m_string = m_string[-1]
              
 
-            BCD_string = BCD_string + first_byte_string + d_string +" "+ col_bit + h_string + " " + "1" +" "+ "11" + m_string + " "
+            #BCD_string = BCD_string + first_byte_string + d_string +" "+ col_bit + h_string + " " + "1" +" "+ "11" + m_string + " "
+            BCD_string = BCD_string + first_byte_string + d_string + col_bit + h_string + "1" +"11" + m_string
 
     return BCD_string
 
@@ -252,3 +258,7 @@ print("Coefficient Continuation","     ")
 print(get_BCD_values(grouped_decimal))
 
 
+print("Full Binary Representation not split")
+complete_binary = sign_bit + get_combination_field(e_prime,normalized_input) + get_exponent_field(e_prime) + get_BCD_values(grouped_decimal)
+print("-------------------------------------------")
+print(complete_binary)
