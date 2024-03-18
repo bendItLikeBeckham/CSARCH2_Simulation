@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 
 # Gets Sign Bit
 def check_sign(decimal):
@@ -108,6 +110,9 @@ def convert_AEI_to_String(a_binary_string,e_binary_string,i_binary_string):
     
     return a_binary_string + " " + e_binary_string + " " + '0' + " " + i_binary_string + "  "
 
+
+# Gets binary value of a digit and converts it to binary string equivalent
+
 def get_binary_digit_to_string(num):
     binary_num = bin(num)
     binary_num_string = str(binary_num)
@@ -179,7 +184,7 @@ def get_BCD_values(grouped_decimal):
     return BCD_string
 
 
-decimal = float(input("Input Decimal: "))
+decimal = Decimal(input("Input Decimal: "))
 exponent = int(input("Input Exponent: "))
 
 e_prime = get_e_prime(exponent, decimal)
