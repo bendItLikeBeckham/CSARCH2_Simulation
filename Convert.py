@@ -120,6 +120,17 @@ def get_binary_digit_to_string(num):
 
     return binary_num_string
 
+def get_binary_byte_to_string(byte):
+    byte_string = remove_0b(byte)
+
+    if len(byte_string) == 1:
+        byte_string = "0" + byte_string
+                
+    if len(byte_string) == 3:
+        byte_string = byte_string[:2]
+    
+    return byte_string
+
 #Get the whole string of all A,E,I numbers in densely packed BCD Form
 def get_BCD_values(grouped_decimal):
 
@@ -145,8 +156,43 @@ def get_BCD_values(grouped_decimal):
             i_binary_string = get_binary_digit_to_string(i)
 
             BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string) + " "
+
+        elif major_count == 1:
+            if a > 7:
+                col_bit = "10"
+                third_byte = bin(a)
+            elif e > 7:
+                col_bit = "01"
+                third_byte = bin(e)
+            elif i > 7:
+                col_bit = "00"
+                third_byte = bin(i)
+
+            d_string = get_binary_digit_to_string(a)
+            h_string = get_binary_digit_to_string(e)
+            m_string = get_binary_digit_to_string(i)
+
+            if len(d_string) > 1:
+                d_string = d_string[-1]
+            if len(h_string) > 1:
+                h_string = h_string[-1]
+            if len(m_string) > 1:
+                m_string = m_string[-1]
+            
+            if e < 8 and i < 8:
+                first_byte_string = get_binary_byte_to_string(str(bin(i)))
+                second_byte_string = get_binary_byte_to_string(str(bin(e)))           
+            if e < 8 and a < 8:
+                first_byte_string = get_binary_byte_to_string(str(bin(a)))
+                second_byte_string = get_binary_byte_to_string(str(bin(e)))
+            if  a < 8 and i < 8:
+                first_byte_string = get_binary_byte_to_string(str(bin(a)))
+                second_byte_string = get_binary_byte_to_string(str(bin(i)))
+                    
+            BCD_string = BCD_string + first_byte_string + d_string +" "+ second_byte_string + h_string + " " + "1" +" "+ col_bit + m_string + " "
         
-        if major_count == 2:
+        
+        elif major_count == 2:
              
             if a < 8:
                 col_bit = "10"
@@ -158,15 +204,8 @@ def get_BCD_values(grouped_decimal):
                 col_bit = "00"
                 first_byte = bin(i)
 
-            first_byte_string = str(first_byte)
-            first_byte_string = remove_0b(first_byte_string)
-
-            if len(first_byte_string) == 1:
-                first_byte_string = "0" + first_byte_string
-            
-            if len(first_byte_string) == 3:
-                first_byte_string = first_byte_string[:2]
-
+            first_byte_string = get_binary_byte_to_string(str(first_byte))
+    
             d_string = get_binary_digit_to_string(a)
             h_string = get_binary_digit_to_string(e)
             m_string = get_binary_digit_to_string(i)
@@ -182,7 +221,6 @@ def get_BCD_values(grouped_decimal):
             BCD_string = BCD_string + first_byte_string + d_string +" "+ col_bit + h_string + " " + "1" +" "+ "11" + m_string + " "
 
     return BCD_string
-
 
 decimal = Decimal(input("Input Decimal: "))
 exponent = int(input("Input Exponent: "))
