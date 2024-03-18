@@ -194,14 +194,20 @@ exponent = int(input("Input Exponent: "))
 e_prime = get_e_prime(exponent, decimal)
 sign_bit = check_sign(decimal)
 
+dec_string = str(decimal)
+left, _, right = dec_string.partition('.')
+
+print(left)
+print(right)
+
 normalized_input = normalize_decimal(decimal, e_prime)
 print("Normalized Input: " + normalized_input)
 
 grouped_decimal = get_grouped_decimal(normalized_input)
 
-print("Sign","     ","Combination Field","     ","Exponent Continuation","     ","Coefficient Continuation","     ") 
-print(sign_bit,"     ", get_combination_field(e_prime,normalized_input),"     ", get_exponent_field(e_prime))
-
+print("Sign","     ","Combination Field","     ","Exponent Continuation") 
+print(sign_bit,"        ", get_combination_field(e_prime,normalized_input),"                 ", get_exponent_field(e_prime))
+print("Coefficient Continuation","     ")
 print(get_BCD_values(grouped_decimal))
 
 
