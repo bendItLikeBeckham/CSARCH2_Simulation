@@ -123,6 +123,7 @@ def get_BCD_values(grouped_decimal):
     BCD_string = ""
 
     for group in grouped_decimal:
+        major_count = 0
         a = int(group[0])
         e = int(group[1])
         i = int(group[2])
