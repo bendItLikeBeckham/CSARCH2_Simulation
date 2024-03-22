@@ -315,30 +315,41 @@ sign_bit = check_sign(decimal)
 
 
 #Split fractional and whole part into two strings
-dec_string = str(decimal)
-left, _, right = dec_string.partition('.')
-print(left)
-print(right)
+#dec_string = str(decimal)
+#left, _, right = dec_string.partition('.')
+#print(left)
+#print(right)
 
 normalized_input = normalize_decimal(decimal, round_option, sign_bit)
-print("Normalized Input: " + normalized_input)
+#print("Normalized Input: " + normalized_input)
 
 grouped_decimal = get_grouped_decimal(normalized_input)
 
-print("Sign","     ","Combination Field","     ","Exponent Continuation") 
-print(sign_bit,"        ", get_combination_field(e_prime,normalized_input),"                 ", get_exponent_field(e_prime))
-print("Coefficient Continuation","     ")
-print(get_BCD_values(grouped_decimal))
-
-
-print("Full Binary Representation not split")
-complete_binary = sign_bit + get_combination_field(e_prime,normalized_input) + get_exponent_field(e_prime) + get_BCD_values(grouped_decimal)
-print("-------------------------------------------")
-print(complete_binary)
-print("-------------------------------------------")
-hexed = hex_to_binary(complete_binary)
-print(hexed.upper())
-
+if exponent <= 369 and exponent >= -398:
+    valid_output = ("Sign: {}\n".format(sign_bit) + "Combination Field: {}\n".format(get_combination_field(e_prime, normalized_input)) + "Exponent Continuation: {}\n".format(get_exponent_field(e_prime)) + "\nCoefficient Continuation:\n" + get_BCD_values(grouped_decimal))
+    print(valid_output)
+    complete_binary = sign_bit + get_combination_field(e_prime,normalized_input) + get_exponent_field(e_prime) + get_BCD_values(grouped_decimal)
+    hexed = hex_to_binary(complete_binary)
+    print(hexed.upper())
+elif exponent > 369 and decimal != 0:
+    if sign_bit == '1':
+        valid_output = "Negative Infinity"
+        print(valid_output)
+        complete_binary = "1111111111110000000000000000000000000000000000000000000000000000"
+        hexed = hex_to_binary(complete_binary)
+        print(hexed.upper())
+    elif sign_bit == '0':
+        valid_output = "Positive Infinity"
+        print(valid_output)
+        complete_binary = "0111111111110000000000000000000000000000000000000000000000000000"
+        hexed = hex_to_binary(complete_binary)
+        print("Hex:" + hexed.upper())
+elif  (exponent > 369 or exponent < -398) and decimal == 0:
+        valid_output = "NaN"
+        print(valid_output)
+        complete_binary = "0111111111111000000000000000000000000000000000000000000000000000"
+        hexed = hex_to_binary(complete_binary)
+        print(hexed.upper())
 # Write inputs and outputs to a text file
 filename = "input_output.txt"  # You can change the filename as needed
 
@@ -346,11 +357,7 @@ with open(filename, 'w') as file:
     file.write("Input Decimal: {}\n".format(decimal))
     file.write("Input Exponent: {}\n".format(exponent))
     file.write("\n")
-    file.write("Sign: {}\n".format(sign_bit))
-    file.write("Combination Field: {}\n".format(get_combination_field(e_prime, normalized_input)))
-    file.write("Exponent Continuation: {}\n".format(get_exponent_field(e_prime)))
-    file.write("Coefficient Continuation:")
-    file.write(get_BCD_values(grouped_decimal))
+    file.write(valid_output)
     file.write("\n")
     file.write("Hex:")
     file.write(hex_to_binary(complete_binary).upper())
