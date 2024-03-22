@@ -62,23 +62,38 @@ def get_combination_field(e_prime, normalized_input):
     string_e_prime_binary = str(e_prime_binary)
     string_e_prime_binary = remove_0b(string_e_prime_binary)
 
-    if len(string_e_prime_binary) < 10:
-        num_zeros = 10 - len(string_e_prime_binary)
-        string_e_prime_binary = '0' * num_zeros  + string_e_prime_binary
 
-    first_2_combi = string_e_prime_binary[:2]
+    if (normalized_input[0] != '8' and normalized_input[0] !='9'):
+        if len(string_e_prime_binary) < 10:
+            num_zeros = 10 - len(string_e_prime_binary)
+            string_e_prime_binary = '0' * num_zeros  + string_e_prime_binary
 
-    last_three_digits = bin(int(normalized_input[0]))
-    string_three_digits = str(last_three_digits)
-    string_three_digits = remove_0b(string_three_digits)
+        first_2_combi = string_e_prime_binary[:2]
 
-    if len(string_three_digits) < 3:
-        num_zeros = 3 - len(string_three_digits)
-        string_three_digits = '0' * num_zeros  + string_three_digits 
-    if len(string_three_digits) == 4:
-         string_three_digits = string_three_digits[1:]
+        last_three_digits = bin(int(normalized_input[0]))
+        string_three_digits = str(last_three_digits)
+        string_three_digits = remove_0b(string_three_digits)
 
-    return first_2_combi + string_three_digits
+        if len(string_three_digits) < 3:
+            num_zeros = 3 - len(string_three_digits)
+            string_three_digits = '0' * num_zeros  + string_three_digits 
+        if len(string_three_digits) == 4:
+            string_three_digits = string_three_digits[1:]
+
+        whole_combi = first_2_combi + string_three_digits
+    else:
+        if len(string_e_prime_binary) < 10:
+            num_zeros = 10 - len(string_e_prime_binary)
+            string_e_prime_binary = '0' * num_zeros  + string_e_prime_binary
+
+        first_2_combi = string_e_prime_binary[:2]
+        if (normalized_input[0] == '8'):
+            last_digit = '0'
+        elif (normalized_input[0] == '9'):
+            last_digit = '1'
+        whole_combi =  '11' + first_2_combi + last_digit
+
+    return whole_combi
 
 #Get Exponent Continuation
 def get_exponent_field(e_prime):
