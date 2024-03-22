@@ -309,7 +309,7 @@ def hex_to_binary (complete_binary):
     end = 4
 
     #Every binary is 64 bits long
-    for x in range(11):
+    for x in range(16):
         #4 bits at a time
         sub = binary[start:end]
         decimal = int(sub, 2) #decinal
