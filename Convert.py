@@ -17,7 +17,21 @@ def truncate_towards_zero(value):
     return int(value)
 
 def round_to_nearest(value):
-    return int(value + 0.5) if value >= 0 else int(value - 0.5)
+    integer_part = int(value)
+    fractional_part = value - integer_part
+    
+    # If the fractional part is exactly 0.5, round towards the nearest even integer
+    if fractional_part == 0.5:
+        # If the integer part is even, round towards it
+        if integer_part % 2 == 0:
+            return integer_part
+        # If the integer part is odd, round away from it
+        else:
+            return integer_part + 1
+    # Otherwise, round as usual
+    else:
+        return int(value + 0.5) if value >= 0 else int(value - 0.5)
+
 
 # Round the decimal value based on the chosen rounding method
 def round_decimal(decimal, rounding_method):
