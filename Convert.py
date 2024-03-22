@@ -1,5 +1,37 @@
 from decimal import Decimal
 
+# Define rounding methods
+def round_towards_negative_infinity(value):
+    if value >= 0:
+        return int(value)
+    else:
+        return int(value) - 1
+
+def round_towards_positive_infinity(value):
+    if value >= 0:
+        return int(value) + 1
+    else:
+        return int(value)
+
+def truncate_towards_zero(value):
+    return int(value)
+
+def round_to_nearest(value):
+    return int(value + 0.5) if value >= 0 else int(value - 0.5)
+
+# Round the decimal value based on the chosen rounding method
+def round_decimal(decimal, rounding_method):
+    if rounding_method == "floor":
+        return round_towards_negative_infinity(decimal)
+    elif rounding_method == "ceiling":
+        return round_towards_positive_infinity(decimal)
+    elif rounding_method == "truncate":
+        return truncate_towards_zero(decimal)
+    elif rounding_method == "round":
+        return round_to_nearest(decimal)
+    else:
+        print("Invalid rounding method specified.")
+        return None
 
 # Gets Sign Bit
 def check_sign(decimal):
