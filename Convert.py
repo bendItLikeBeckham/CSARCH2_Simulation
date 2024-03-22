@@ -353,3 +353,21 @@ print(complete_binary)
 print("-------------------------------------------")
 hexed = hex_to_binary(complete_binary)
 print(hexed.upper())
+
+# Write inputs and outputs to a text file
+filename = "input_output.txt"  # You can change the filename as needed
+
+with open(filename, 'w') as file:
+    file.write("Input Decimal: {}\n".format(decimal))
+    file.write("Input Exponent: {}\n".format(exponent))
+    file.write("\n")
+    file.write("Sign: {}\n".format(sign_bit))
+    file.write("Combination Field: {}\n".format(get_combination_field(e_prime, normalized_input)))
+    file.write("Exponent Continuation: {}\n".format(get_exponent_field(e_prime)))
+    file.write("Coefficient Continuation:")
+    file.write(get_BCD_values(grouped_decimal))
+    file.write("\n")
+    file.write("Hex:")
+    file.write(hex_to_binary(complete_binary).upper())
+
+print("Inputs and outputs have been written to '{}'.".format(filename))
