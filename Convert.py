@@ -1,52 +1,5 @@
 from decimal import Decimal
 
-# Define rounding methods
-def round_towards_negative_infinity(value):
-    if value >= 0:
-        return int(value)
-    else:
-        return int(value) - 1
-
-def round_towards_positive_infinity(value):
-    if value >= 0:
-        return int(value) + 1
-    else:
-        return int(value)
-
-def truncate_towards_zero(value):
-    return int(value)
-
-def round_to_nearest(value):
-    integer_part = int(value)
-    fractional_part = value - integer_part
-    
-    # If the fractional part is exactly 0.5, round towards the nearest even integer
-    if fractional_part == 0.5:
-        # If the integer part is even, round towards it
-        if integer_part % 2 == 0:
-            return integer_part
-        # If the integer part is odd, round away from it
-        else:
-            return integer_part + 1
-    # Otherwise, round as usual
-    else:
-        return int(value + 0.5) if value >= 0 else int(value - 0.5)
-
-
-# Round the decimal value based on the chosen rounding method
-def round_decimal(decimal, rounding_method):
-    if rounding_method == "floor":
-        return round_towards_negative_infinity(decimal)
-    elif rounding_method == "ceiling":
-        return round_towards_positive_infinity(decimal)
-    elif rounding_method == "truncate":
-        return truncate_towards_zero(decimal)
-    elif rounding_method == "round":
-        return round_to_nearest(decimal)
-    else:
-        print("Invalid rounding method specified.")
-        return None
-
 # Gets Sign Bit
 def check_sign(decimal):
     if decimal < 0:
@@ -66,8 +19,7 @@ def get_e_prime(exponent, decimal):
     return exponent + 398
 
 # Returns Normalized 16 digit of the decimal
-def normalize_decimal(decimal):
-
+def normalize_decimal(decimal, rounding_method, sign_bit):
     #Splits up the whole number and fractional to left and right respectively (Removes '-' as well)
     dec_string = str(decimal)
     if(dec_string[0] == '-'):
@@ -94,7 +46,39 @@ def normalize_decimal(decimal):
             ans = ans[:-1]
     
     #Put round up here
+    if len(ans) > 16:
+        if rounding_method == "Floor":
+            if sign_bit == '1':
+                ans = ans[:16]
+                ans_int = int(ans) + 1
+                ans = str(ans_int)
+            elif sign_bit == '0':
+                ans = ans[:16]
+        elif rounding_method == "Ceiling":
+            if sign_bit == '1':
+                ans = ans[:16]
+            elif sign_bit == '0':
+                ans = ans[:16]
+                ans_int = int(ans) + 1
+                ans = str(ans_int)                
+        elif rounding_method == "Truncate":
+            ans = ans[:16]
+        elif rounding_method == "RTN":
+            extra_numbers = ans[16:]
+            ans = ans[:16]
+            ans_int = int(ans)
+            right_zeroes = len(extra_numbers)
+            check_num = '1' + '0' * right_zeroes
+            check_num = int(check_num) / 2
+            extra_numbers = int(extra_numbers)
 
+            if extra_numbers < check_num:
+                ans = str(ans_int)
+            elif extra_numbers > check_num:
+                ans = str(ans_int + 1)
+            elif extra_numbers == check_num:
+                if int(ans[15]) % 2 == 1:
+                    ans = str(ans_int + 1)
     return ans
 
 # Removes the "0b" at the start of a binary string after it is converted
@@ -324,6 +308,7 @@ def hex_to_binary (complete_binary):
 
 decimal = Decimal(input("Input Decimal: "))
 exponent = int(input("Input Exponent: "))
+round_option = input("Input Rounding Option (Truncate, Floor, Ceiling, RTN):")
 
 e_prime = get_e_prime(exponent, decimal)
 sign_bit = check_sign(decimal)
@@ -335,7 +320,7 @@ left, _, right = dec_string.partition('.')
 print(left)
 print(right)
 
-normalized_input = normalize_decimal(decimal)
+normalized_input = normalize_decimal(decimal, round_option, sign_bit)
 print("Normalized Input: " + normalized_input)
 
 grouped_decimal = get_grouped_decimal(normalized_input)

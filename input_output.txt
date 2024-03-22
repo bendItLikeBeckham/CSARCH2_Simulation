@@ -1,0 +1,8 @@
+Input Decimal: 123456789012345350
+Input Exponent: 15
+
+Sign: 0
+Combination Field: 01001
+Exponent Continuation: 10011101
+Coefficient Continuation:01001101001011100111000001111000101000111001010100
+Hex:267534B9C1E28E54
