@@ -1,4 +1,10 @@
-from decimal import Decimal
+import tkinter as tk
+from tkinter import filedialog, messagebox, simpledialog
+import tkinter as tk
+from tkinter import ttk, filedialog, messagebox
+import os
+
+from decimal import Decimal, InvalidOperation
 
 # Gets Sign Bit
 def check_sign(decimal):
@@ -150,7 +156,6 @@ def get_grouped_decimal(normalized_input):
     return groups
 
 #Converts A E I numbers of the current group to densely packed BCD equivalent
-
 def convert_AEI_to_String(a_binary_string,e_binary_string,i_binary_string):
     if len(a_binary_string) < 3:
             num_zeroes = 3 - len(a_binary_string)
@@ -166,9 +171,7 @@ def convert_AEI_to_String(a_binary_string,e_binary_string,i_binary_string):
     return a_binary_string + e_binary_string + '0' + i_binary_string
 
 
-
 # Gets binary value of a digit and converts it to binary string equivalent
-
 def get_binary_digit_to_string(num):
     binary_num = bin(num)
     binary_num_string = str(binary_num)
@@ -214,7 +217,6 @@ def get_BCD_values(grouped_decimal):
 
             #BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string) + " "
             BCD_string = BCD_string + convert_AEI_to_String(a_binary_string, e_binary_string,i_binary_string)
-
 
         elif major_count == 1:
             if a > 7:
@@ -276,8 +278,7 @@ def get_BCD_values(grouped_decimal):
                 h_string = h_string[-1]
             if len(m_string) > 1:
                 m_string = m_string[-1]
-             
-
+            
             #BCD_string = BCD_string + first_byte_string + d_string +" "+ col_bit + h_string + " " + "1" +" "+ "11" + m_string + " "
             BCD_string = BCD_string + first_byte_string + d_string + col_bit + h_string + "1" +"11" + m_string
 
@@ -306,60 +307,155 @@ def hex_to_binary (complete_binary):
 
     return full_Hex
 
-decimal = Decimal(input("Input Decimal: "))
-exponent = int(input("Input Exponent: "))
-round_option = input("Input Rounding Option (Truncate, Floor, Ceiling, RTN):")
+class Decimal64ConverterApp:
+    def __init__(self, root):
+        self.root = root
+        root.title("Decimal-64 Floating Point Converter")
+        root.resizable(width=False, height=False)
 
-e_prime = get_e_prime(exponent, decimal)
-sign_bit = check_sign(decimal)
+        style = ttk.Style()
+        style.theme_use('clam')
 
+        # Frame for padding and better layout
+        frame = ttk.Frame(root, padding="10 10 10 10")
+        frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        frame.columnconfigure(0, weight=1)
+        frame.rowconfigure(0, weight=1)
 
-#Split fractional and whole part into two strings
-#dec_string = str(decimal)
-#left, _, right = dec_string.partition('.')
-#print(left)
-#print(right)
+        # Input Label and Entry
+        self.input_label = ttk.Label(frame, text="Enter Decimal Value:")
+        self.input_label.grid(row=0, column=0, sticky="w", pady=5)
+        
+        self.input_entry = ttk.Entry(frame, width=50)
+        self.input_entry.grid(row=0, column=1, sticky="ew", pady=5)
 
-normalized_input = normalize_decimal(decimal, round_option, sign_bit)
-#print("Normalized Input: " + normalized_input)
+        self.input_label2 = ttk.Label(frame, text="Enter Base-10 Exponent:")
+        self.input_label2.grid(row=1, column=0, sticky="w", pady=5)
+        
+        self.input_entry2 = ttk.Entry(frame, width=50)
+        self.input_entry2.grid(row=1, column=1, sticky="ew", pady=5)
 
-grouped_decimal = get_grouped_decimal(normalized_input)
+        # Rounding Method Selection
+        self.rounding_label = ttk.Label(frame, text="Select Rounding Method:")
+        self.rounding_label.grid(row=2, column=0, sticky="w", pady=5)
+        
+        self.rounding_var = tk.StringVar(root)
+        self.rounding_var.set("Default")  # default value
+        
+        self.rounding_option = ttk.OptionMenu(frame, self.rounding_var, "Truncate", "Truncate", "Floor", "Ceiling", "RTN")
+        self.rounding_option.grid(row=2, column=1, sticky="ew", pady=5)
 
-if exponent <= 369 and exponent >= -398:
-    valid_output = ("Sign: {}\n".format(sign_bit) + "Combination Field: {}\n".format(get_combination_field(e_prime, normalized_input)) + "Exponent Continuation: {}\n".format(get_exponent_field(e_prime)) + "\nCoefficient Continuation:\n" + get_BCD_values(grouped_decimal))
-    print(valid_output)
-    complete_binary = sign_bit + get_combination_field(e_prime,normalized_input) + get_exponent_field(e_prime) + get_BCD_values(grouped_decimal)
-    hexed = hex_to_binary(complete_binary)
-    print(hexed.upper())
-elif exponent > 369 and decimal != 0:
-    if sign_bit == '1':
-        valid_output = "Negative Infinity"
-        print(valid_output)
-        complete_binary = "1111111111110000000000000000000000000000000000000000000000000000"
-        hexed = hex_to_binary(complete_binary)
-        print(hexed.upper())
-    elif sign_bit == '0':
-        valid_output = "Positive Infinity"
-        print(valid_output)
-        complete_binary = "0111111111110000000000000000000000000000000000000000000000000000"
-        hexed = hex_to_binary(complete_binary)
-        print("Hex:" + hexed.upper())
-elif  (exponent > 369 or exponent < -398) and decimal == 0:
-        valid_output = "NaN"
-        print(valid_output)
-        complete_binary = "0111111111111000000000000000000000000000000000000000000000000000"
-        hexed = hex_to_binary(complete_binary)
-        print(hexed.upper())
-# Write inputs and outputs to a text file
-filename = "input_output.txt"  # You can change the filename as needed
+        # Convert Button
+        self.convert_button = ttk.Button(frame, text="Convert", command=self.convert, takefocus=False)
+        self.convert_button.grid(row=3, column=0, columnspan=2, pady=10)
 
-with open(filename, 'w') as file:
-    file.write("Input Decimal: {}\n".format(decimal))
-    file.write("Input Exponent: {}\n".format(exponent))
-    file.write("\n")
-    file.write(valid_output)
-    file.write("\n")
-    file.write("Hex:")
-    file.write(hex_to_binary(complete_binary).upper())
+        # Output Display
+        self.output_label = ttk.Label(frame, text="Output:")
+        self.output_label.grid(row=4, column=0, sticky="nw", pady=5)
+        
+        self.output_text = tk.Text(frame, height=10, width=50)
+        self.output_text.grid(row=5, column=0, columnspan=2, sticky="ew", pady=5)
+        self.output_text.config(state='disabled') # Disable editing at default to prevent user input
+        
+        # Save Button
+        self.save_button = ttk.Button(frame, text="Save to File", command=self.save_to_file, takefocus=False)
+        self.save_button.grid(row=6, column=0, columnspan=2, pady=10)
 
-print("Inputs and outputs have been written to '{}'.".format(filename))
+    def convert(self):
+        # Placeholder for conversion logic
+        try:
+            decimal_input = Decimal(self.input_entry.get())
+        except InvalidOperation:
+            messagebox.showerror("Input Error", "Invalid decimal value. Please enter a valid decimal number.")
+            return  # Exit the function early
+
+        try:
+            exponent_input = int(self.input_entry2.get())
+        except ValueError:
+            messagebox.showerror("Input Error", "Invalid exponent value. Please enter a valid integer.")
+            return  # Exit the function early
+        
+        rounding_method = self.rounding_var.get()
+        
+        e_prime = get_e_prime(exponent_input, decimal_input)
+        sign_bit = check_sign(decimal_input)
+
+        normalized_input = normalize_decimal(decimal_input, rounding_method, sign_bit)
+
+        grouped_decimal = get_grouped_decimal(normalized_input)
+
+        if exponent_input <= 369 and exponent_input >= -398:
+            valid_output = ("Sign: {}\n".format(sign_bit) + "Combination Field: {}\n".format(get_combination_field(e_prime, normalized_input)) + "Exponent Continuation: {}\n".format(get_exponent_field(e_prime)) + "Coefficient Continuation:\n" + get_BCD_values(grouped_decimal))
+
+            # Temporarily enable text field to insert the output
+            self.output_text.config(state='normal')
+            self.output_text.delete("1.0", tk.END)  # Clear existing text
+            self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
+
+            complete_binary = sign_bit + get_combination_field(e_prime,normalized_input) + get_exponent_field(e_prime) + get_BCD_values(grouped_decimal)
+            hexed = hex_to_binary(complete_binary)
+
+            self.output_text.insert(tk.END, f"\n\nHexadecimal Result: {hexed.upper()}")
+            self.output_text.config(state='disabled')  # disable editing to prevent user input
+
+        elif exponent_input > 369 and decimal_input != 0:
+            if sign_bit == '1':
+                valid_output = "Negative Infinity"
+
+                # Temporarily enable text field to insert the output
+                self.output_text.config(state='normal')
+                self.output_text.delete("1.0", tk.END)  # Clear existing text
+                self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
+  
+                complete_binary = "1111111111110000000000000000000000000000000000000000000000000000"
+                hexed = hex_to_binary(complete_binary)
+
+                self.output_text.insert(tk.END, f"\n\nHexadecimal Result: {hexed.upper()}")
+                self.output_text.config(state='disabled')  # Disable editing to prevent user input
+
+            elif sign_bit == '0':
+                valid_output = "Positive Infinity"
+
+                # Temporarily enable text field to insert the output
+                self.output_text.config(state='normal')
+                self.output_text.delete("1.0", tk.END)  # Clear existing text
+                self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
+
+                complete_binary = "0111111111110000000000000000000000000000000000000000000000000000"
+                hexed = hex_to_binary(complete_binary)
+
+                self.output_text.insert(tk.END, f"\n\nHexadecimal Result: {hexed.upper()}")
+                self.output_text.config(state='disabled')  # Disable editing to prevent user input
+
+        elif  (exponent_input > 369 or exponent_input < -398) and decimal_input == 0:
+                valid_output = "NaN"
+
+                # Temporarily enable text field to insert the output
+                self.output_text.config(state='normal')
+                self.output_text.delete("1.0", tk.END)  # Clear existing text
+                self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
+
+                complete_binary = "0111111111111000000000000000000000000000000000000000000000000000"
+                hexed = hex_to_binary(complete_binary)
+                
+                self.output_text.insert(tk.END, f"\n\nHexadecimal Result: {hexed.upper()}")
+                self.output_text.config(state='disabled')  # Disable editing to prevent user input
+
+    def save_to_file(self):
+        script_directory = os.path.dirname(os.path.realpath(__file__))
+
+        file_path = filedialog.asksaveasfilename(
+            initialdir=script_directory,
+            defaultextension=".txt",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
+        )
+
+        if file_path:
+            with open(file_path, 'w') as file:
+                file.write(self.output_text.get("1.0", tk.END))
+            messagebox.showinfo("Save to File", "File saved successfully.")
+
+# Create the app
+root = tk.Tk()
+app = Decimal64ConverterApp(root)
+root.mainloop()

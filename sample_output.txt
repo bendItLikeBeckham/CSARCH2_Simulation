@@ -1,0 +1,12 @@
+Decimal Input: 12345
+Exponent Input: 12
+Rounding Method: Floor
+
+ --Results-- 
+Sign: 0
+Combination Field: 01000
+Exponent Continuation: 10011010
+Coefficient Continuation:
+00000000000000000000000000000000000100100111000101
+
+Hexadecimal Result: 22680000000049C5

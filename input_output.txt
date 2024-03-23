@@ -1,5 +1,0 @@
-Input Decimal: 1.12381293
-Input Exponent: 370
-
-Positive Infinity
-Hex:7FF0000000000000
