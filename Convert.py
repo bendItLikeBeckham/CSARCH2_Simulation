@@ -408,7 +408,7 @@ class Decimal64ConverterApp:
                 self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
   
                 complete_binary = "1111111111110000000000000000000000000000000000000000000000000000"
-                output_binary = "1 11111 11111100 00000000000000000000000000000000000000000000000000"
+                output_binary = "1 11110 11111100 00000000000000000000000000000000000000000000000000"
                 hexed = hex_to_binary(complete_binary)
 
                 self.output_text.insert(tk.END, f"\n\nBinary Result: {output_binary}")
@@ -424,7 +424,7 @@ class Decimal64ConverterApp:
                 self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
 
                 complete_binary = "0111111111110000000000000000000000000000000000000000000000000000"
-                output_binary = "0 11111 11111100 00000000000000000000000000000000000000000000000000"
+                output_binary = "0 11110 11111100 00000000000000000000000000000000000000000000000000"
                 hexed = hex_to_binary(complete_binary)
 
                 self.output_text.insert(tk.END, f"\n\nBinary Result: {output_binary}")
