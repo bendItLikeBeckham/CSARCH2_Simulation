@@ -367,13 +367,13 @@ class Decimal64ConverterApp:
             decimal_input = Decimal(self.input_entry.get())
         except InvalidOperation:
             messagebox.showerror("Input Error", "Invalid decimal value. Please enter a valid decimal number.")
-            return  # Exit the function early
+            return
 
         try:
             exponent_input = int(self.input_entry2.get())
         except ValueError:
             messagebox.showerror("Input Error", "Invalid exponent value. Please enter a valid integer.")
-            return  # Exit the function early
+            return
         
         rounding_method = self.rounding_var.get()
         
@@ -408,9 +408,11 @@ class Decimal64ConverterApp:
                 self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
   
                 complete_binary = "1111111111110000000000000000000000000000000000000000000000000000"
+                output_binary = "1 11111 11111100 00000000000000000000000000000000000000000000000000"
                 hexed = hex_to_binary(complete_binary)
 
-                self.output_text.insert(tk.END, f"\n\nHexadecimal Result: {hexed.upper()}")
+                self.output_text.insert(tk.END, f"\n\nBinary Result: {output_binary}")
+                self.output_text.insert(tk.END, f"\nHexadecimal Result: {hexed.upper()}")
                 self.output_text.config(state='disabled')  # Disable editing to prevent user input
 
             elif sign_bit == '0':
@@ -422,9 +424,11 @@ class Decimal64ConverterApp:
                 self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
 
                 complete_binary = "0111111111110000000000000000000000000000000000000000000000000000"
+                output_binary = "0 11111 11111100 00000000000000000000000000000000000000000000000000"
                 hexed = hex_to_binary(complete_binary)
 
-                self.output_text.insert(tk.END, f"\n\nHexadecimal Result: {hexed.upper()}")
+                self.output_text.insert(tk.END, f"\n\nBinary Result: {output_binary}")
+                self.output_text.insert(tk.END, f"\nHexadecimal Result: {hexed.upper()}")
                 self.output_text.config(state='disabled')  # Disable editing to prevent user input
 
         elif  (exponent_input > 369 or exponent_input < -398) and decimal_input == 0:
@@ -436,9 +440,11 @@ class Decimal64ConverterApp:
                 self.output_text.insert(tk.END, f"Decimal Input: {decimal_input}\nExponent Input: {exponent_input}\nRounding Method: {rounding_method}\n\n --Results-- \n{valid_output}")
 
                 complete_binary = "0111111111111000000000000000000000000000000000000000000000000000"
+                output_binary = "0 11111 11111110 00000000000000000000000000000000000000000000000000"
                 hexed = hex_to_binary(complete_binary)
                 
-                self.output_text.insert(tk.END, f"\n\nHexadecimal Result: {hexed.upper()}")
+                self.output_text.insert(tk.END, f"\n\nBinary Result: {output_binary}")
+                self.output_text.insert(tk.END, f"\nHexadecimal Result: {hexed.upper()}")
                 self.output_text.config(state='disabled')  # Disable editing to prevent user input
 
     def save_to_file(self):
